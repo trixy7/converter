@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Site Verification -->
+    <meta name="google-site-verification" content="UYERfONfJky4beyF-hpCz0gnOthFlpInbHQL1wSSXtU" />
+    <meta name="msvalidate.01" content="667810A5EB8AC456527BEC3710C0FC77" />
+    <!-- End Site Verification -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=780">
+    <title>.ICO Converter</title>
+    <meta name="keywords" content=".ICO Converter, icon convert, ico convert, converter, convert, ico, ico file">
+    <link rel="canonical" href="">
+    <meta name="robots" content="index, follow">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Verdana', sans-serif;
+            background-color: #fcfcfc;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        h2 {
+            margin-top: 0;
+            font-size: 22px;
+            color: #000;
+        }
+        input[type="file"] {
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .size-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        label {
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #000;
+        }
+        #output-gallery {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .icon-card {
+            border: 1px solid #eee;
+            padding: 10px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+        }
+        .icon-card img {
+            background: #f0f0f0;
+            margin-bottom: 10px;
+            image-rendering: pixelated;
+        }
+        .download-link {
+            font-size: 12px;
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .download-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>.ICO Converter</h2>
+    <input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp, image/gif">
+    <div class="size-grid">
+        <label><input type="checkbox" class="size-opt" value="16" checked>16px</label>
+        <label><input type="checkbox" class="size-opt" value="32" checked>32px</label>
+        <label><input type="checkbox" class="size-opt" value="48" checked>48px</label>
+        <label><input type="checkbox" class="size-opt" value="64">64px</label>
+        <label><input type="checkbox" class="size-opt" value="128">128px</label>
+        <label><input type="checkbox" class="size-opt" value="256">256px</label>
+    </div>
+    <button id="convertBtn">Generate Icons</button>
+    <div id="output-gallery"></div>
+</div>
+<canvas id="mainCanvas" style="display:none;"></canvas>
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const convertBtn = document.getElementById('convertBtn');
+    const gallery = document.getElementById('output-gallery');
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+    convertBtn.addEventListener('click', () => {
+        const file = imageInput.files[0];
+        if (!file) {
+            alert("Select an image file first.");
+            return;
+        }
+        const selectedSizes = Array.from(document.querySelectorAll('.size-opt:checked')) .map(cb => parseInt(cb.value));
+        if (selectedSizes.length === 0) {
+            alert("Select at least one icon size.");
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                gallery.innerHTML = '';
+                let sX = 0, sY = 0, sW = img.width, sH = img.height;
+                if (img.width > img.height) {
+                    sW = img.height;
+                    sX = (img.width - img.height) / 2;
+                } else {
+                    sH = img.width;
+                    sY = (img.height - img.width) / 2;
+                }
+                selectedSizes.forEach(size => {
+                    canvas.width = size;
+                    canvas.height = size;
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+                    ctx.clearRect(0, 0, size, size);
+                    ctx.drawImage(img, sX, sY, sW, sH, 0, 0, size, size);
+                    const dataUrl = canvas.toDataURL('image/png');
+                    const card = document.createElement('div');
+                    card.className = 'icon-card';
+                    card.innerHTML = `
+                        <img src="${dataUrl}" width="${size}" height="${size}" alt="${size}px preview">
+                        <span style="font-size:11px; margin-bottom:5px;">${size}x${size}</span>
+                        <a href="${dataUrl}" download="favicon_${size}.ico" class="download-link">Download</a>
+                    `;
+                    gallery.appendChild(card);
+                });
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+</script>
+</body>
+</html>
