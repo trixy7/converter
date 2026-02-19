@@ -51,3 +51,5 @@ Disallow:
 
 User agent: Exabot
 Disallow:
+
+Sitemap: https://ico-converter.xyz/sitemap.xml
