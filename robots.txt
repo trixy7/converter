@@ -1,2 +1,38 @@
 User-agent: *
-Disallow: 
+Disallow:
+
+User-agent: ia_archiver
+Disallow:
+
+User-agent: Google-InspectionTool
+Disallow:
+
+User-agent: Googlebot
+Disallow:
+
+User-agent: Slurp
+Disallow:
+
+User-agent: Bingbot
+Disallow:
+
+User-agent: Applebot
+Disallow:
+
+User-agent: DuckDuckBot
+Disallow:
+
+User-agent: SemrushBot
+Disallow:
+
+User-agent: ContentKing
+Disallow:
+
+User-agent: Yeti
+Disallow:
+
+User-agent: Baiduspider
+Disallow:
+
+User-agent: sogou spider
+Disallow:
