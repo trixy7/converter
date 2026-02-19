@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
+
     <!-- Google Analytics Start -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-TPLXSDFVK5"></script>
     <script>
@@ -17,11 +17,10 @@
     <meta name="msvalidate.01" content="667810A5EB8AC456527BEC3710C0FC77" />
     <!-- Site Verification End -->
     
+    <!-- SEO -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- SEO -->
     <title>.ICO Converter</title>
     <meta name="description" content="Convert images into .ICO format.">
     <meta name="keywords" content=".ICO Converter, icon convert, ico convert, converter, convert, ico, ico file">
@@ -37,98 +36,28 @@
     <meta property="og:image" content="https://trixy7.github.io/converter/og-image.png">
     <meta property="og:url" content="https://trixy7.github.io/converter/">
 
+    <!-- jszip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
     <!-- CSS -->
     <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            font-family: 'Verdana', sans-serif;
-            background-color: #fcfcfc;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-            background: #ffffff;
-            padding: 30px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-        h2 {
-            margin-top: 0;
-            font-size: 22px;
-            color: #000;
-        }
-        input[type="file"] {
-            margin: 20px 0;
-            font-size: 14px;
-        }
-        .size-grid {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin: 20px 0;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 5px;
-        }
-        label {
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        button {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        button:hover {
-            background: #000;
-        }
-        #output-gallery {
-            margin-top: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-        .icon-card {
-            border: 1px solid #eee;
-            padding: 10px;
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: white;
-        }
-        .icon-card img {
-            background: #f0f0f0;
-            margin-bottom: 10px;
-            image-rendering: pixelated;
-        }
-        .download-link {
-            font-size: 12px;
-            color: #0066cc;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .download-link:hover {
-            text-decoration: underline;
-        }
+        body { font-family: sans-serif; display: flex; justify-content: center; padding: 20px; background-color: #f5f5f5; }
+        .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: center; }
+        h2 { margin-bottom: 5px; }
+        p { color: #666; font-size: 14px; margin-bottom: 20px; }
+        .size-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: left; margin: 15px 0; padding: 10px; background: #fafafa; border-radius: 8px; }
+        .bit-depth-group { display: flex; justify-content: space-around; padding: 10px; margin-bottom: 15px; background: #eee; border-radius: 8px; font-size: 14px; }
+        button { width: 100%; padding: 12px; margin-top: 10px; cursor: pointer; border: none; border-radius: 5px; font-weight: bold; transition: 0.2s; }
+        #convertBtn { background: #007bff; color: white; }
+        #convertBtn:hover { background: #0056b3; }
+        #bulkBtn { background: #28a745; color: white; display: none; }
+        #bulkBtn:hover { background: #218838; }
+        #output-gallery { margin-top: 25px; display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; }
+        .icon-card { background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; }
+        .download-link { margin-top: 8px; font-size: 11px; color: #007bff; text-decoration: none; border: 1px solid #007bff; padding: 4px 8px; border-radius: 4px; }
+        .download-link:hover { background: #007bff; color: white; }
     </style>
-    
+
     <!-- SCHEMA Start -->
     <script type="application/ld+json">
 {
@@ -146,22 +75,28 @@
 }
 </script>
     <!-- SCHEMA End -->
-    
+
 </head>
 <body>
+
 <div class="container">
     <h2>.ICO Converter</h2>
     <p>Convert images into .ICO format.</p>
-    <input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp, image/gif">
-    <div class="size-grid">
-        <label><input type="checkbox" class="size-opt" value="16"> 16px</label>
-        <label><input type="checkbox" class="size-opt" value="32"> 32px</label>
-        <label><input type="checkbox" class="size-opt" value="48"> 48px</label>
+    <input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp, image/gif, image/bmp">
+    <div class="size-grid" id="sizeOptions">
+        <label><input type="checkbox" class="size-opt" value="16" checked> 16px</label>
+        <label><input type="checkbox" class="size-opt" value="32" checked> 32px</label>
+        <label><input type="checkbox" class="size-opt" value="48" checked> 48px</label>
         <label><input type="checkbox" class="size-opt" value="64"> 64px</label>
         <label><input type="checkbox" class="size-opt" value="128"> 128px</label>
-        <label><input type="checkbox" class="size-opt" value="256"> 256px</label>
+        <label><input type="checkbox" class="size-opt" value="256" id="opt256"> 256px</label>
+    </div>
+    <div class="bit-depth-group">
+        <label><input type="radio" name="bitDepth" value="8"> 8-bit (Palette)</label>
+        <label><input type="radio" name="bitDepth" value="32" checked> 32-bit (Alpha)</label>
     </div>
     <button id="convertBtn">Generate Icons</button>
+    <button id="bulkBtn">Download All (.ZIP)</button>
     <div id="output-gallery"></div>
 </div>
 <canvas id="mainCanvas" style="display:none;"></canvas>
@@ -200,55 +135,94 @@
 <script>
     const imageInput = document.getElementById('imageInput');
     const convertBtn = document.getElementById('convertBtn');
+    const bulkBtn = document.getElementById('bulkBtn');
     const gallery = document.getElementById('output-gallery');
     const canvas = document.getElementById('mainCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    let iconDataList = [];
+    document.getElementsByName('bitDepth').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const opt256 = document.getElementById('opt256');
+            if (e.target.value === "8") {
+                opt256.checked = false;
+                opt256.disabled = true;
+            } else {
+                opt256.disabled = false;
+            }
+        });
+    });
     convertBtn.addEventListener('click', () => {
         const file = imageInput.files[0];
-        if (!file) {
-            alert("Select an image file first.");
-            return;
-        }
-        const selectedSizes = Array.from(document.querySelectorAll('.size-opt:checked')) .map(cb => parseInt(cb.value));
-        if (selectedSizes.length === 0) {
-            alert("Select at least one icon size.");
-            return;
-        }
+        if (!file) return alert("Select an image file first.");
+        const selectedSizes = Array.from(document.querySelectorAll('.size-opt:checked')).map(cb => parseInt(cb.value));
+        const bitDepth = parseInt(document.querySelector('input[name="bitDepth"]:checked').value);
+        if (selectedSizes.length === 0) return alert("Select at least one icon size.");
         const reader = new FileReader();
         reader.onload = (event) => {
             const img = new Image();
-            img.onload = () => {
+            img.onload = async () => {
                 gallery.innerHTML = '';
-                let sX = 0, sY = 0, sW = img.width, sH = img.height;
-                if (img.width > img.height) {
-                    sW = img.height;
-                    sX = (img.width - img.height) / 2;
-                } else {
-                    sH = img.width;
-                    sY = (img.height - img.width) / 2;
+                iconDataList = [];
+                bulkBtn.style.display = 'none';
+                let sSize = Math.min(img.width, img.height);
+                let sX = (img.width - sSize) / 2;
+                let sY = (img.height - sSize) / 2;
+                for (const size of selectedSizes) {
+                    const blob = await createIconBlob(img, sX, sY, sSize, size, bitDepth);
+                    const url = URL.createObjectURL(blob);
+                    iconDataList.push({ blob, size });
+                    renderIconCard(url, size);
                 }
-                selectedSizes.forEach(size => {
-                    canvas.width = size;
-                    canvas.height = size;
-                    ctx.imageSmoothingEnabled = true;
-                    ctx.imageSmoothingQuality = 'high';
-                    ctx.clearRect(0, 0, size, size);
-                    ctx.drawImage(img, sX, sY, sW, sH, 0, 0, size, size);
-                    const dataUrl = canvas.toDataURL('image/png');
-                    const card = document.createElement('div');
-                    card.className = 'icon-card';
-                    card.innerHTML = `
-                        <img src="${dataUrl}" width="${size}" height="${size}" alt="${size}px preview">
-                        <span style="font-size:11px; margin-bottom:5px;">${size}x${size}</span>
-                        <a href="${dataUrl}" download="favicon_${size}.ico" class="download-link">Download</a>
-                    `;
-                    gallery.appendChild(card);
-                });
+                if (iconDataList.length > 0) bulkBtn.style.display = 'block';
             };
             img.src = event.target.result;
         };
         reader.readAsDataURL(file);
     });
+    function createIconBlob(img, sX, sY, sSize, targetSize, depth) {
+        return new Promise((resolve) => {
+            canvas.width = targetSize;
+            canvas.height = targetSize;
+            ctx.clearRect(0, 0, targetSize, targetSize);
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, sX, sY, sSize, sSize, 0, 0, targetSize, targetSize);
+            const format = 'image/png';
+            const quality = (depth === 8) ? 0.2 : 1.0;
+            canvas.toBlob((blob) => resolve(blob), format, quality);
+        });
+    }
+    function renderIconCard(url, size) {
+        const card = document.createElement('div');
+        card.className = 'icon-card';
+        card.innerHTML = `
+            <img src="${url}" width="32" height="32" alt="Preview">
+            <span style="font-size:11px; margin: 5px 0;">${size}x${size}</span>
+            <a href="${url}" download="favicon.ico" class="download-link">Download</a>
+        `;
+        card.querySelector('.download-link').addEventListener('click', () => {
+            handleRedirect();
+        });
+        gallery.appendChild(card);
+    }
+    bulkBtn.addEventListener('click', async () => {
+        const zip = new JSZip();
+        iconDataList.forEach(item => {
+            zip.file(`favicon_${item.size}x${item.size}.ico`, item.blob);
+        });
+        const zipContent = await zip.generateAsync({ type: "blob" });
+        const zipUrl = URL.createObjectURL(zipContent);
+        const tempLink = document.createElement('a');
+        tempLink.href = zipUrl;
+        tempLink.download = "icons_pack.zip";
+        tempLink.click();
+        handleRedirect();
+    });
+    function handleRedirect() {
+        setTimeout(() => {
+            window.open('https://omg10.com/4/10617141', '_blank');
+        }, 100);
+    }
 </script>
 </body>
 </html>
