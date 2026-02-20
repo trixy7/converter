@@ -1,3 +1,4 @@
 OWNERDOMAIN=ico-converter.xyz
 monetag.com, 3235507, DIRECT
+aads.com, 504954, DIRECT
 popcash.net, 499676, DIRECT
